@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="גיא וירדן — פיתוח אפליקציות Web Full-Stack, AI ומערכות ניהול לעסקים ישראליים" />
+  <title>גיא וירדן | פיתוח אפליקציות Full-Stack</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── TelAvivBrutalist from guyandyarden.com ─── */
+    @font-face {
+      font-family: 'TelAvivBrutalist';
+      font-style: normal; font-weight: normal; font-display: swap;
+      src: url('https://guyandyarden.com/wp-content/uploads/2025/09/TelAviv-BrutalistRegular.woff2') format('woff2'),
+           url('https://guyandyarden.com/wp-content/uploads/2025/09/TelAviv-BrutalistRegular.woff') format('woff');
+    }
+    @font-face {
+      font-family: 'TelAvivBrutalist';
+      font-style: normal; font-weight: 100; font-display: swap;
+      src: url('https://guyandyarden.com/wp-content/uploads/2025/09/TelAviv-BrutalistLight.woff2') format('woff2'),
+           url('https://guyandyarden.com/wp-content/uploads/2025/09/TelAviv-BrutalistLight.woff') format('woff');
+    }
+    @font-face {
+      font-family: 'TelAvivBrutalist';
+      font-style: normal; font-weight: 800; font-display: swap;
+      src: url('https://guyandyarden.com/wp-content/uploads/2025/09/TelAviv-BrutalistBold.woff2') format('woff2'),
+           url('https://guyandyarden.com/wp-content/uploads/2025/09/TelAviv-BrutalistBold.woff') format('woff');
+    }
+
+    /* ─── Variables ─── */
+    :root {
+      --bg:        #0D1029;
+      --bg2:       #12163A;
+      --bg3:       #141942;
+      --lime:      #B3D045;
+      --lime-dim:  rgba(179,208,69,0.12);
+      --lime-mid:  rgba(179,208,69,0.25);
+      --lime-bdr:  rgba(179,208,69,0.35);
+      --text:      #FFFEFE;
+      --text-s:    rgba(255,254,254,0.7);
+      --text-m:    rgba(255,254,254,0.4);
+      --card-bg:   rgba(236,237,237,0.06);
+      --card-bdr:  rgba(255,255,255,0.09);
+      --glass-bg:  rgba(18,22,58,0.55);
+      --glass-bdr: rgba(255,255,255,0.18);
+      --font:      'TelAvivBrutalist', 'Assistant', sans-serif;
+    }
+
+    /* ─── Reset ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--lime); border-radius: 2px; }
+
+    /* ─── Spinning animation ─── */
+    @keyframes spin    { to { transform: rotate(360deg); } }
+    @keyframes spinRev { to { transform: rotate(-360deg); } }
+    @keyframes fadeUp  { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes blink   { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ─── Reveal ─── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.75s ease, transform 0.75s ease; }
+    .reveal.on { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: 0.1s; }
+    .d2 { transition-delay: 0.2s; }
+    .d3 { transition-delay: 0.3s; }
+    .d4 { transition-delay: 0.4s; }
+
+    /* ═══════════════ NAV ═══════════════ */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      padding: 1.6vw 3.5vw;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: all 0.4s ease;
+    }
+    #nav.stuck {
+      background: rgba(13,16,41,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--card-bdr);
+      padding: 1vw 3.5vw;
+    }
+    .logo {
+      font-family: 'Montserrat', 'Assistant', sans-serif; font-weight: 600; font-size: clamp(16px,1.5vw,22px);
+      letter-spacing: 0.25em; color: var(--text); text-transform: uppercase;
+    }
+    .logo .amp { color: var(--text-s); font-weight: 300; }
+    .nav-links { display: flex; align-items: center; gap: 4px; list-style: none; }
+    .nav-links a {
+      font-family: var(--font); font-weight: 100; font-size: clamp(13px,1.2vw,16px);
+      color: var(--text-s); padding: 8px 18px; border-radius: 6px;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta-btn {
+      font-family: var(--font) !important; font-weight: 800 !important;
+      font-size: clamp(13px,1.1vw,15px) !important;
+      background: var(--lime) !important; color: var(--bg) !important;
+      padding: 10px 26px !important; border-radius: 6px !important;
+    }
+    .nav-cta-btn:hover { background: #c8e84d !important; color: var(--bg) !important; }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 8px;
+    }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--text-s); border-radius: 2px; }
+
+    /* ═══════════════ HERO ═══════════════ */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 10vw 4vw 8vw;
+      position: relative; overflow: hidden;
+      background: radial-gradient(at center center, var(--bg2) 0%, var(--bg) 62%);
+    }
+
+    /* Spinning rings */
+    .rings {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    .ring {
+      position: absolute; border-radius: 50%;
+      border: 1px solid rgba(179,208,69,0.08);
+    }
+    .ring-1 { width: 680px; height: 680px; animation: spin 30s linear infinite; }
+    .ring-2 { width: 500px; height: 500px; border-color: rgba(179,208,69,0.05); animation: spinRev 22s linear infinite; }
+    .ring-3 { width: 350px; height: 350px; border-color: rgba(179,208,69,0.07); animation: spin 16s linear infinite; }
+    .ring-dot {
+      position: absolute;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--lime);
+      box-shadow: 0 0 12px var(--lime), 0 0 24px var(--lime);
+      top: -4px; left: 50%; transform: translateX(-50%);
+    }
+
+    /* Bottom section fade */
+    .hero-bottom-fade {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 200px;
+      background: radial-gradient(at bottom center, var(--bg3) 0%, transparent 70%);
+      pointer-events: none; z-index: 1;
+    }
+
+    .hero-content { position: relative; z-index: 2; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      border: 1px solid rgba(179,208,69,0.3);
+      background: rgba(179,208,69,0.06);
+      color: var(--lime); padding: 8px 22px; border-radius: 100px;
+      font-size: clamp(12px,1.1vw,14px); font-weight: 100; letter-spacing: 0.05em;
+      margin-bottom: 40px;
+      animation: fadeUp 0.9s ease both;
+    }
+    .badge-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--lime); box-shadow: 0 0 8px var(--lime);
+      animation: blink 2s infinite;
+    }
+
+    .hero-title {
+      font-family: var(--font); font-weight: 800;
+      font-size: clamp(40px,6vw,88px);
+      line-height: 1.05; letter-spacing: -0.03em;
+      color: var(--text); margin-bottom: 24px;
+      animation: fadeUp 0.9s ease 0.15s both;
+    }
+    .hero-title .lime { color: var(--lime); }
+
+    .hero-sub {
+      font-weight: 100; font-size: clamp(16px,1.5vw,20px);
+      color: var(--text-s); max-width: 540px; margin: 0 auto 52px;
+      line-height: 1.8;
+      animation: fadeUp 0.9s ease 0.3s both;
+    }
+
+    /* Lime slash button */
+    .hero-btns {
+      display: flex; align-items: center; gap: 16px;
+      justify-content: center; flex-wrap: wrap;
+      animation: fadeUp 0.9s ease 0.45s both;
+    }
+    .btn-lime {
+      position: relative; overflow: hidden;
+      font-family: var(--font); font-weight: 800;
+      font-size: clamp(14px,1.2vw,17px);
+      color: var(--bg); background: var(--lime);
+      padding: 14px 42px; border: none; cursor: pointer;
+      border-radius: 4px; transition: all 0.3s ease;
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .btn-lime:hover { background: #c8e84d; transform: translateY(-2px); box-shadow: 0 12px 32px rgba(179,208,69,0.3); }
+
+    .btn-ghost {
+      font-family: var(--font); font-weight: 100;
+      font-size: clamp(14px,1.2vw,17px);
+      color: var(--text-s); background: transparent;
+      padding: 14px 42px; border: 1px solid var(--card-bdr); cursor: pointer;
+      border-radius: 4px; transition: all 0.3s ease;
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .btn-ghost:hover { color: var(--text); border-color: var(--glass-bdr); transform: translateY(-2px); }
+
+    /* Stats */
+    .hero-stats {
+      display: flex; align-items: center; gap: 52px;
+      margin-top: 72px; flex-wrap: wrap; justify-content: center;
+      animation: fadeUp 0.9s ease 0.6s both;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-weight: 800; font-size: clamp(34px,3.5vw,48px);
+      line-height: 1; color: var(--lime);
+    }
+    .stat-lbl { font-weight: 100; font-size: clamp(12px,1vw,14px); color: var(--text-m); margin-top: 6px; }
+    .stat-div { width: 1px; height: 44px; background: var(--card-bdr); }
+
+    /* Scroll hint */
+    .scroll-hint {
+      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      z-index: 2; animation: fadeUp 1s ease 1.1s both;
+    }
+    .scroll-hint span { font-weight: 100; font-size: 11px; color: var(--text-m); letter-spacing: 0.15em; }
+    .scroll-arrow {
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 1px solid rgba(179,208,69,0.25);
+      display: flex; align-items: center; justify-content: center;
+      animation: bounce 2s ease infinite;
+      color: var(--lime);
+    }
+    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+
+    /* ═══════════════ SECTION SHARED ═══════════════ */
+    section { padding: 100px 4vw; border-top: 1px solid var(--card-bdr); }
+    .inner { max-width: 1180px; margin: 0 auto; }
+
+    .s-label {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-weight: 100; font-size: clamp(11px,0.9vw,13px);
+      letter-spacing: 0.18em; color: var(--lime); text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .s-label::before { content: ''; width: 28px; height: 1px; background: var(--lime); }
+    .s-title {
+      font-weight: 800; font-size: clamp(28px,4vw,52px);
+      letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 16px;
+    }
+    .s-desc { font-weight: 100; font-size: clamp(15px,1.3vw,18px); color: var(--text-s); max-width: 500px; line-height: 1.8; }
+
+    /* ═══════════════ SERVICES ═══════════════ */
+    .srv-header {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 60px; align-items: end; margin-bottom: 56px;
+    }
+    .srv-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+
+    .srv-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-bdr);
+      border-radius: 16px; padding: 32px 24px;
+      backdrop-filter: blur(10px);
+      transition: all 0.4s ease; cursor: default;
+      position: relative; overflow: hidden;
+    }
+    .srv-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--lime), transparent);
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .srv-card:hover { border-color: var(--lime-bdr); transform: translateY(-5px); }
+    .srv-card:hover::before { opacity: 1; }
+
+    .srv-ico {
+      width: 48px; height: 48px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin-bottom: 20px;
+      background: var(--lime-dim); border: 1px solid var(--lime-bdr);
+    }
+    .srv-title { font-weight: 800; font-size: clamp(15px,1.3vw,18px); margin-bottom: 10px; }
+    .srv-desc  { font-weight: 100; font-size: clamp(13px,1.1vw,15px); color: var(--text-m); line-height: 1.7; }
+
+    /* ═══════════════ PROJECTS ═══════════════ */
+    .proj-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 48px; gap: 24px; flex-wrap: wrap;
+    }
+    .filter-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .f-btn {
+      font-family: var(--font); font-weight: 100;
+      font-size: clamp(12px,1vw,14px);
+      padding: 8px 24px; border-radius: 100px;
+      border: 1px solid var(--card-bdr); background: transparent;
+      color: var(--text-m); cursor: pointer; transition: all 0.25s ease;
+    }
+    .f-btn:hover { border-color: var(--lime-bdr); color: var(--text); }
+    .f-btn.on {
+      background: var(--lime); border-color: var(--lime);
+      color: var(--bg); font-weight: 800;
+    }
+
+    .proj-grid {
+      display: grid; grid-template-columns: repeat(auto-fill,minmax(340px,1fr)); gap: 20px;
+    }
+
+    .proj-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-bdr);
+      border-radius: 16px; overflow: hidden;
+      transition: all 0.4s ease; cursor: default;
+      position: relative;
+      backdrop-filter: blur(10px);
+    }
+    .proj-card:hover {
+      border-color: var(--lime-bdr);
+      transform: translateY(-6px);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px var(--lime-dim);
+    }
+
+    .proj-vis {
+      height: 180px; position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .proj-vis-bg { position: absolute; inset: 0; }
+    .proj-vis-grid {
+      position: absolute; inset: 0; opacity: 0.1;
+      background-image:
+        linear-gradient(rgba(179,208,69,0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(179,208,69,0.3) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .proj-ico {
+      width: 72px; height: 72px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 34px; position: relative; z-index: 2;
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    /* Lime top border on each card visual */
+    .proj-vis::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--lime-mid), transparent);
+    }
+
+    .proj-body { padding: 22px 24px 24px; }
+    .proj-cat {
+      font-weight: 100; font-size: clamp(10px,0.85vw,12px);
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--lime); margin-bottom: 10px;
+    }
+    .proj-name {
+      font-weight: 800; font-size: clamp(18px,1.7vw,22px);
+      letter-spacing: -0.02em; margin-bottom: 9px;
+    }
+    .proj-desc {
+      font-weight: 100; font-size: clamp(13px,1.05vw,15px);
+      color: var(--text-m); line-height: 1.75; margin-bottom: 18px;
+    }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: clamp(10px,0.8vw,12px); font-weight: 100;
+      padding: 4px 12px; border-radius: 100px;
+      border: 1px solid var(--card-bdr);
+      color: var(--text-m);
+    }
+
+    /* ═══════════════ TECH ═══════════════ */
+    #tech { text-align: center; }
+    #tech .s-label { justify-content: center; }
+    #tech .s-label::before { display: none; }
+    #tech .s-label::after { content: ''; width: 28px; height: 1px; background: var(--lime); }
+
+    .tech-grid {
+      display: grid; grid-template-columns: repeat(auto-fill,minmax(120px,1fr)); gap: 12px;
+      margin-bottom: 48px;
+    }
+    .tech-item {
+      background: var(--card-bg); border: 1px solid var(--card-bdr);
+      border-radius: 12px; padding: 20px 14px; text-align: center;
+      transition: all 0.3s ease; backdrop-filter: blur(10px);
+    }
+    .tech-item:hover { border-color: var(--lime-bdr); transform: translateY(-3px); }
+    .t-ico { font-size: 26px; display: block; margin-bottom: 8px; line-height: 1; }
+    .t-name { font-weight: 100; font-size: clamp(11px,0.9vw,13px); color: var(--text-m); }
+
+    /* Marquee */
+    .marquee-wrap {
+      overflow: hidden;
+      -webkit-mask: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+      mask: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+    }
+    .marquee-track {
+      display: flex; gap: 12px; width: max-content;
+      animation: marquee 30s linear infinite;
+    }
+    .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+    .m-chip {
+      background: var(--card-bg); border: 1px solid var(--card-bdr);
+      padding: 8px 20px; border-radius: 100px; white-space: nowrap;
+      font-weight: 100; font-size: clamp(12px,0.9vw,13px);
+      color: var(--text-m); display: flex; align-items: center; gap: 8px;
+    }
+    .m-chip .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--lime); flex-shrink: 0; }
+
+    /* ═══════════════ CONTACT ═══════════════ */
+    #contact .inner { display: flex; justify-content: center; }
+
+    .contact-box {
+      max-width: 720px; width: 100%;
+      position: relative; overflow: hidden;
+      background: linear-gradient(180deg, rgba(179,208,69,0.06) 0%, transparent 40%),
+                  var(--card-bg);
+      border: 1px solid var(--glass-bdr);
+      border-radius: 24px;
+      backdrop-filter: blur(15px);
+      padding: 72px 56px;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(179,208,69,0.06);
+    }
+    .contact-box::before {
+      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 50%; height: 1px;
+      background: linear-gradient(to right, transparent, var(--lime), transparent);
+    }
+    .contact-glow {
+      position: absolute; width: 300px; height: 300px;
+      border-radius: 50%; background: var(--lime);
+      filter: blur(80px); opacity: 0.05;
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      pointer-events: none;
+    }
+
+    /* Spinning ring in contact */
+    .contact-ring {
+      position: absolute; width: 400px; height: 400px; border-radius: 50%;
+      border: 1px solid rgba(179,208,69,0.06);
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      animation: spin 25s linear infinite;
+      pointer-events: none;
+    }
+
+    .contact-box .s-title { position: relative; margin-bottom: 16px; }
+    .contact-box .s-desc { margin: 0 auto 40px; max-width: 380px; position: relative; }
+    .contact-btns {
+      display: flex; gap: 14px; justify-content: center;
+      flex-wrap: wrap; position: relative;
+    }
+
+    .btn-wa {
+      font-family: var(--font); font-weight: 800;
+      font-size: clamp(14px,1.1vw,16px);
+      background: #25D366; color: white;
+      padding: 14px 34px; border-radius: 6px;
+      transition: all 0.3s ease;
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .btn-wa:hover { background: #22c55e; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(37,211,102,0.25); }
+
+    .btn-email {
+      font-family: var(--font); font-weight: 100;
+      font-size: clamp(14px,1.1vw,16px);
+      background: transparent; color: var(--text);
+      padding: 14px 34px; border-radius: 6px;
+      border: 1px solid var(--card-bdr);
+      transition: all 0.3s ease;
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .btn-email:hover { border-color: var(--lime-bdr); color: var(--lime); transform: translateY(-2px); }
+
+    /* ═══════════════ FOOTER ═══════════════ */
+    footer {
+      border-top: 1px solid var(--card-bdr);
+      padding: 36px 4vw; position: relative;
+      background: radial-gradient(at bottom center, var(--bg2) 0%, var(--bg) 60%);
+    }
+    .footer-inner {
+      max-width: 1180px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 20px; flex-wrap: wrap;
+    }
+    .footer-logo {
+      font-family: 'Montserrat', 'Assistant', sans-serif; font-weight: 600;
+      font-size: clamp(14px,1.2vw,18px); letter-spacing: 0.25em; text-transform: uppercase;
+    }
+    .footer-logo .amp { color: var(--text-s); font-weight: 300; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-weight: 100; font-size: 14px; color: var(--text-m); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--lime); }
+    .footer-copy { font-weight: 100; font-size: 13px; color: var(--text-m); }
+
+    /* ═══════════════ MOBILE NAV ═══════════════ */
+    #mob-nav {
+      display: none; position: fixed; inset: 0; z-index: 190;
+      background: rgba(13,16,41,0.97); backdrop-filter: blur(20px);
+      flex-direction: column; align-items: center; justify-content: center; gap: 36px;
+    }
+    .mob-link {
+      font-weight: 800; font-size: 28px; color: var(--text);
+      transition: color 0.2s;
+    }
+    .mob-link:hover { color: var(--lime); }
+
+    /* ═══════════════ RESPONSIVE ═══════════════ */
+    @media (max-width: 900px) {
+      #nav { padding: 18px 24px; }
+      #nav.stuck { padding: 12px 24px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .srv-header { grid-template-columns: 1fr; gap: 20px; }
+      .srv-grid { grid-template-columns: repeat(2,1fr); }
+      .ring-1 { width: 400px; height: 400px; }
+      .ring-2 { width: 300px; height: 300px; }
+      .ring-3 { width: 200px; height: 200px; }
+    }
+    @media (max-width: 640px) {
+      section { padding: 72px 20px; }
+      .proj-grid { grid-template-columns: 1fr; }
+      .hero-stats { gap: 24px; }
+      .stat-div { display: none; }
+      .contact-box { padding: 48px 24px; }
+      footer { padding: 32px 20px; }
+      .srv-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .hero-btns { flex-direction: column; align-items: stretch; }
+      .btn-lime, .btn-ghost { justify-content: center; }
+      .contact-btns { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAV ═══ -->
+  <nav id="nav">
+    <div class="logo">GUY <span class="amp">&</span> YARDEN</div>
+    <ul class="nav-links">
+      <li><a href="#services">שירותים</a></li>
+      <li><a href="#projects">פרויקטים</a></li>
+      <li><a href="#tech">טכנולוגיות</a></li>
+      <li><a href="#contact" class="nav-cta-btn">בואו נדבר</a></li>
+    </ul>
+    <button class="hamburger" id="menu-btn" aria-label="תפריט">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div id="mob-nav">
+    <a href="#services" class="mob-link">שירותים</a>
+    <a href="#projects" class="mob-link">פרויקטים</a>
+    <a href="#tech"     class="mob-link">טכנולוגיות</a>
+    <a href="#contact"  class="mob-link" style="color:var(--lime);">בואו נדבר</a>
+  </div>
+
+  <main>
+
+    <!-- ═══ HERO ═══ -->
+    <section id="hero">
+      <!-- Spinning rings -->
+      <div class="rings">
+        <div class="ring ring-1"><div class="ring-dot"></div></div>
+        <div class="ring ring-2"></div>
+        <div class="ring ring-3"></div>
+      </div>
+      <div class="hero-bottom-fade"></div>
+
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          פיתוח Full-Stack ישראלי ברמה עולמית
+        </div>
+
+        <h1 class="hero-title">
+          הופכים רעיונות<br>
+          ל<span class="lime">אפליקציות</span><br>
+          שמניעות עסקים
+        </h1>
+
+        <p class="hero-sub">
+          מ-E-Commerce מלא ועד פלטפורמות SaaS מורכבות עם AI —
+          בונים פתרונות דיגיטליים שעובדים בסביבת Production.
+        </p>
+
+        <div class="hero-btns">
+          <a href="#projects" class="btn-lime">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            ראה את העבודות שלנו
+          </a>
+          <a href="#contact" class="btn-ghost">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            צור קשר
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-num"><span class="cnt" data-to="30">0</span>+</div>
+            <div class="stat-lbl">פרויקטים</div>
+          </div>
+          <div class="stat-div"></div>
+          <div class="stat">
+            <div class="stat-num"><span class="cnt" data-to="20">0</span>+</div>
+            <div class="stat-lbl">לקוחות מרוצים</div>
+          </div>
+          <div class="stat-div"></div>
+          <div class="stat">
+            <div class="stat-num"><span class="cnt" data-to="3">0</span>+</div>
+            <div class="stat-lbl">שנות ניסיון</div>
+          </div>
+          <div class="stat-div"></div>
+          <div class="stat">
+            <div class="stat-num"><span class="cnt" data-to="100">0</span>%</div>
+            <div class="stat-lbl">שביעות רצון</div>
+          </div>
+        </div>
+      </div><!-- /hero-content -->
+
+      <div class="scroll-hint">
+        <span>גלול</span>
+        <div class="scroll-arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SERVICES ═══ -->
+    <section id="services">
+      <div class="inner">
+        <div class="srv-header">
+          <div>
+            <div class="s-label reveal">מה אנחנו עושים</div>
+            <h2 class="s-title reveal">פתרונות דיגיטליים<br>לכל צורך עסקי</h2>
+          </div>
+          <p class="s-desc reveal">מפתחים Full-Stack עם מומחיות ב-AI ואוטומציה — בונים מוצרים שסוגרים עסקאות, לא רק נראים יפה.</p>
+        </div>
+        <div class="srv-grid">
+          <div class="srv-card reveal">
+            <div class="srv-ico">⚡</div>
+            <h3 class="srv-title">אפליקציות Web Full-Stack</h3>
+            <p class="srv-desc">Next.js, React, TypeScript, Firebase — מהירות, עמידות ומדרגיות עם חוויית משתמש ברמה גבוהה.</p>
+          </div>
+          <div class="srv-card reveal d1">
+            <div class="srv-ico">🤖</div>
+            <h3 class="srv-title">AI ואוטומציה</h3>
+            <p class="srv-desc">שילוב Claude, Gemini ו-Groq בתוך המוצר — קבלת החלטות חכמה, ניתוח תוכן ואוטומציה של תהליכים.</p>
+          </div>
+          <div class="srv-card reveal d2">
+            <div class="srv-ico">🌐</div>
+            <h3 class="srv-title">אתרי תדמית + CMS</h3>
+            <p class="srv-desc">אתרים עם מערכת עריכה מובנית — עורכים תוכן בעצמכם ללא צורך במפתח בכל שינוי.</p>
+          </div>
+          <div class="srv-card reveal d3">
+            <div class="srv-ico">📊</div>
+            <h3 class="srv-title">SaaS ומערכות ניהול</h3>
+            <p class="srv-desc">CRM, לוחות בקרה, הזמנות וניהול — פתרונות מותאמים אישית לפעילות העסקית שלכם.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ PROJECTS ═══ -->
+    <section id="projects">
+      <div class="inner">
+        <div class="proj-header">
+          <div>
+            <div class="s-label reveal">עבודות נבחרות</div>
+            <h2 class="s-title reveal">פרויקטים שמדברים<br>בעד עצמם</h2>
+          </div>
+          <div class="filter-row reveal">
+            <button class="f-btn on" data-f="all">הכל</button>
+            <button class="f-btn" data-f="ecom">E-Commerce</button>
+            <button class="f-btn" data-f="saas">SaaS</button>
+            <button class="f-btn" data-f="ai">AI</button>
+            <button class="f-btn" data-f="cms">CMS</button>
+          </div>
+        </div>
+
+        <div class="proj-grid">
+
+          <!-- 1. KonDeal -->
+          <div class="proj-card reveal" data-cat="ecom ai">
+            <div class="proj-vis">
+              <div class="proj-vis-bg" style="background:linear-gradient(135deg,rgba(245,158,11,0.14),rgba(217,119,6,0.22));"></div>
+              <div class="proj-vis-grid"></div>
+              <div class="proj-ico" style="background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.25);">🏆</div>
+            </div>
+            <div class="proj-body">
+              <div class="proj-cat">E-Commerce · AI</div>
+              <h3 class="proj-name">KonDeal</h3>
+              <p class="proj-desc">חנות מקוונת מלאה לגביעים, מדליות ומוצרי ספורט עם שירות חריטת לייזר. AI Trophy Builder עם Gemini ואנליזת תמונות עם Claude Vision.</p>
+              <div class="tags">
+                <span class="tag">Next.js 16</span><span class="tag">Firebase</span>
+                <span class="tag">Claude AI</span><span class="tag">Gemini</span><span class="tag">TypeScript</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. GazTech -->
+          <div class="proj-card reveal d1" data-cat="saas">
+            <div class="proj-vis">
+              <div class="proj-vis-bg" style="background:linear-gradient(135deg,rgba(6,182,212,0.12),rgba(14,165,233,0.22));"></div>
+              <div class="proj-vis-grid"></div>
+              <div class="proj-ico" style="background:rgba(6,182,212,0.15);border-color:rgba(6,182,212,0.25);">⚡</div>
+            </div>
+            <div class="proj-body">
+              <div class="proj-cat">SaaS · B2B · Chrome Extension</div>
+              <h3 class="proj-name">GazTech</h3>
+              <p class="proj-desc">פלטפורמת ניהול מלאה לחברת גז: CRM, הזמנות, Gmail API, חובות, dispatch, Pelecard ותוסף Chrome ייעודי עם לוח בקרה מהיר.</p>
+              <div class="tags">
+                <span class="tag">React + Vite</span><span class="tag">Firebase</span>
+                <span class="tag">Gmail API</span><span class="tag">Chrome Ext</span><span class="tag">Pelecard</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Gesher Golan -->
+          <div class="proj-card reveal d2" data-cat="cms">
+            <div class="proj-vis">
+              <div class="proj-vis-bg" style="background:linear-gradient(135deg,rgba(16,185,129,0.12),rgba(5,150,105,0.22));"></div>
+              <div class="proj-vis-grid"></div>
+              <div class="proj-ico" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.25);">🚗</div>
+            </div>
+            <div class="proj-body">
+              <div class="proj-cat">אתר תדמית · CMS</div>
+              <h3 class="proj-name">גשר גולן</h3>
+              <p class="proj-desc">אתר שיווקי מלא לעסק השכרת רכב עם CMS עצמאי — הבעלים עורך טקסטים ותמונות ישירות, מנהל הזמנות ומפרסם בלוג עם rich-text editor.</p>
+              <div class="tags">
+                <span class="tag">Next.js</span><span class="tag">Tiptap</span>
+                <span class="tag">Firebase</span><span class="tag">TypeScript</span><span class="tag">Vercel</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. PRO-OS -->
+          <div class="proj-card reveal" data-cat="saas">
+            <div class="proj-vis">
+              <div class="proj-vis-bg" style="background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(109,40,217,0.22));"></div>
+              <div class="proj-vis-grid"></div>
+              <div class="proj-ico" style="background:rgba(139,92,246,0.15);border-color:rgba(139,92,246,0.25);">💼</div>
+            </div>
+            <div class="proj-body">
+              <div class="proj-cat">Dashboard · Agency OS</div>
+              <h3 class="proj-name">PRO-OS</h3>
+              <p class="proj-desc">לוח בקרה מסוג OS לניהול סוכנות: לקוחות, פרויקטים, Kanban עם Drag & Drop, לוח שנה, כספים, AI Jarvis וסנכרון Google Calendar.</p>
+              <div class="tags">
+                <span class="tag">React + TS</span><span class="tag">Firebase</span>
+                <span class="tag">@dnd-kit</span><span class="tag">Google Cal</span><span class="tag">Lenis</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. YardenOS -->
+          <div class="proj-card reveal d1" data-cat="saas">
+            <div class="proj-vis">
+              <div class="proj-vis-bg" style="background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(29,78,216,0.22));"></div>
+              <div class="proj-vis-grid"></div>
+              <div class="proj-ico" style="background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.25);">📊</div>
+            </div>
+            <div class="proj-body">
+              <div class="proj-cat">Finance OS · Dashboard</div>
+              <h3 class="proj-name">YardenOS</h3>
+              <p class="proj-desc">מערכת ניהול פיננסי שהחליפה Excel מורכב: תקציב, הוצאות חוזרות, חובות, תיק השקעות, סימולטור פיננסי וגרפים מתקדמים.</p>
+              <div class="tags">
+                <span class="tag">Next.js</span><span class="tag">Firebase</span>
+                <span class="tag">Recharts</span><span class="tag">@dnd-kit</span><span class="tag">TypeScript</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. Jarvis -->
+          <div class="proj-card reveal d2" data-cat="ai">
+            <div class="proj-vis">
+              <div class="proj-vis-bg" style="background:linear-gradient(135deg,rgba(239,68,68,0.12),rgba(220,38,38,0.22));"></div>
+              <div class="proj-vis-grid"></div>
+              <div class="proj-ico" style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.25);">🎤</div>
+            </div>
+            <div class="proj-body">
+              <div class="proj-cat">AI · Voice Agent · Python</div>
+              <h3 class="proj-name">Jarvis</h3>
+              <p class="proj-desc">עוזר קולי אישי דובר עברית ואנגלית: Groq Whisper לזיהוי קול, Gemini 1.5 Flash לחשיבה, Edge-TTS לדיבור ו-Telegram Bot — עם זיכרון עצמי קבוע ב-Git.</p>
+              <div class="tags">
+                <span class="tag">Python</span><span class="tag">FastAPI</span>
+                <span class="tag">Groq Whisper</span><span class="tag">Gemini 1.5</span><span class="tag">Telegram</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 7. Leads -->
+          <div class="proj-card reveal" data-cat="ai saas">
+            <div class="proj-vis">
+              <div class="proj-vis-bg" style="background:linear-gradient(135deg,rgba(179,208,69,0.1),rgba(132,161,36,0.2));"></div>
+              <div class="proj-vis-grid"></div>
+              <div class="proj-ico" style="background:rgba(179,208,69,0.12);border-color:rgba(179,208,69,0.25);">🎯</div>
+            </div>
+            <div class="proj-body">
+              <div class="proj-cat">CRM · AI · Sales</div>
+              <h3 class="proj-name">Leads AI CRM</h3>
+              <p class="proj-desc">Kanban לניהול לידים עם AI — Claude Haiku מייצר בריפינג מותאם לפני כל שיחה, WhatsApp direct, חישוב עמלות ועדכונים אופטימיסטיים.</p>
+              <div class="tags">
+                <span class="tag">React + Vite</span><span class="tag">Claude AI</span>
+                <span class="tag">NocoDB</span><span class="tag">Vercel</span><span class="tag">WhatsApp</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 8. Vault -->
+          <div class="proj-card reveal d1" data-cat="ai">
+            <div class="proj-vis">
+              <div class="proj-vis-bg" style="background:linear-gradient(135deg,rgba(168,85,247,0.12),rgba(147,51,234,0.22));"></div>
+              <div class="proj-vis-grid"></div>
+              <div class="proj-ico" style="background:rgba(168,85,247,0.15);border-color:rgba(168,85,247,0.25);">🧠</div>
+            </div>
+            <div class="proj-body">
+              <div class="proj-cat">AI · Life OS · Automation</div>
+              <h3 class="proj-name">Vault — מוח שני</h3>
+              <p class="proj-desc">ניהול ידע אישי על Obsidian עם Claude Code כ-Jarvis, GitHub Actions לדוחות יומיים, Gemini לעיבוד קבצים — "AI שכבר מכיר אותך לפני שאתה מקליד".</p>
+              <div class="tags">
+                <span class="tag">Obsidian</span><span class="tag">Claude Code</span>
+                <span class="tag">GitHub Actions</span><span class="tag">Python</span><span class="tag">Gemini</span>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /proj-grid -->
+
+        <p style="text-align:center;margin-top:44px;font-weight:100;font-size:15px;color:var(--text-m);">
+          ועוד <strong style="color:var(--lime);">22+ פרויקטים</strong> — E-Commerce, SaaS, AI ואוטומציה
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══ TECH ═══ -->
+    <section id="tech">
+      <div class="inner">
+        <div class="s-label reveal">טכנולוגיות</div>
+        <h2 class="s-title reveal">Stack מוכח בסביבת Production</h2>
+        <p class="s-desc reveal" style="margin:0 auto 52px;">כלים עדכניים שלמדנו לעומק — לא רק "כתבנו Hello World"</p>
+
+        <div class="tech-grid">
+          <div class="tech-item reveal">    <span class="t-ico">▲</span><span class="t-name">Next.js</span></div>
+          <div class="tech-item reveal d1"> <span class="t-ico">⚛</span><span class="t-name">React</span></div>
+          <div class="tech-item reveal d2"> <span class="t-ico">🔷</span><span class="t-name">TypeScript</span></div>
+          <div class="tech-item reveal d3"> <span class="t-ico">🔥</span><span class="t-name">Firebase</span></div>
+          <div class="tech-item reveal">    <span class="t-ico">💨</span><span class="t-name">Tailwind CSS</span></div>
+          <div class="tech-item reveal d1"> <span class="t-ico">🤖</span><span class="t-name">Claude AI</span></div>
+          <div class="tech-item reveal d2"> <span class="t-ico">✨</span><span class="t-name">Gemini AI</span></div>
+          <div class="tech-item reveal d3"> <span class="t-ico">⚡</span><span class="t-name">Groq</span></div>
+          <div class="tech-item reveal">    <span class="t-ico">🐍</span><span class="t-name">Python</span></div>
+          <div class="tech-item reveal d1"> <span class="t-ico">🟢</span><span class="t-name">Node.js</span></div>
+          <div class="tech-item reveal d2"> <span class="t-ico">📦</span><span class="t-name">Supabase</span></div>
+          <div class="tech-item reveal d3"> <span class="t-ico">△</span><span class="t-name">Vercel</span></div>
+          <div class="tech-item reveal">    <span class="t-ico">🎬</span><span class="t-name">Framer Motion</span></div>
+          <div class="tech-item reveal d1"> <span class="t-ico">⚙️</span><span class="t-name">GitHub Actions</span></div>
+        </div>
+
+        <div class="marquee-wrap">
+          <div class="marquee-track">
+            <div class="m-chip"><span class="dot"></span>Next.js App Router</div>
+            <div class="m-chip"><span class="dot"></span>Firebase Firestore</div>
+            <div class="m-chip"><span class="dot"></span>Anthropic Claude SDK</div>
+            <div class="m-chip"><span class="dot"></span>Google Gemini 1.5</div>
+            <div class="m-chip"><span class="dot"></span>Groq Whisper</div>
+            <div class="m-chip"><span class="dot"></span>React Query</div>
+            <div class="m-chip"><span class="dot"></span>Zustand</div>
+            <div class="m-chip"><span class="dot"></span>@dnd-kit</div>
+            <div class="m-chip"><span class="dot"></span>Tiptap Rich Editor</div>
+            <div class="m-chip"><span class="dot"></span>Recharts</div>
+            <div class="m-chip"><span class="dot"></span>Framer Motion</div>
+            <div class="m-chip"><span class="dot"></span>Chrome Extensions MV3</div>
+            <div class="m-chip"><span class="dot"></span>FastAPI + WebSockets</div>
+            <div class="m-chip"><span class="dot"></span>Gmail API</div>
+            <div class="m-chip"><span class="dot"></span>Pelecard Payments</div>
+            <div class="m-chip"><span class="dot"></span>Telegram Bot API</div>
+            <!-- duplicate for seamless -->
+            <div class="m-chip"><span class="dot"></span>Next.js App Router</div>
+            <div class="m-chip"><span class="dot"></span>Firebase Firestore</div>
+            <div class="m-chip"><span class="dot"></span>Anthropic Claude SDK</div>
+            <div class="m-chip"><span class="dot"></span>Google Gemini 1.5</div>
+            <div class="m-chip"><span class="dot"></span>Groq Whisper</div>
+            <div class="m-chip"><span class="dot"></span>React Query</div>
+            <div class="m-chip"><span class="dot"></span>Zustand</div>
+            <div class="m-chip"><span class="dot"></span>@dnd-kit</div>
+            <div class="m-chip"><span class="dot"></span>Tiptap Rich Editor</div>
+            <div class="m-chip"><span class="dot"></span>Recharts</div>
+            <div class="m-chip"><span class="dot"></span>Framer Motion</div>
+            <div class="m-chip"><span class="dot"></span>Chrome Extensions MV3</div>
+            <div class="m-chip"><span class="dot"></span>FastAPI + WebSockets</div>
+            <div class="m-chip"><span class="dot"></span>Gmail API</div>
+            <div class="m-chip"><span class="dot"></span>Pelecard Payments</div>
+            <div class="m-chip"><span class="dot"></span>Telegram Bot API</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CONTACT ═══ -->
+    <section id="contact">
+      <div class="inner">
+        <div class="contact-box reveal">
+          <div class="contact-glow"></div>
+          <div class="contact-ring"></div>
+          <h2 class="s-title">
+            מוכנים להתחיל?<br>
+            <span style="color:var(--lime);">בואו נדבר</span>
+          </h2>
+          <p class="s-desc">ספרו לנו על הפרויקט שלכם — נחזור תוך 24 שעות עם הצעה מותאמת.</p>
+          <div class="contact-btns">
+            <a href="https://wa.me/972500000000" class="btn-wa" target="_blank" rel="noopener">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              WhatsApp
+            </a>
+            <a href="mailto:contact@guyandyarden.com" class="btn-email">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+              שלח מייל
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">GUY <span class="amp">&</span> YARDEN</div>
+      <nav class="footer-links">
+        <a href="#services">שירותים</a>
+        <a href="#projects">פרויקטים</a>
+        <a href="#tech">טכנולוגיות</a>
+        <a href="#contact">צור קשר</a>
+      </nav>
+      <p class="footer-copy">© 2026 גיא וירדן. כל הזכויות שמורות.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('stuck', scrollY > 60), { passive: true });
+
+    // Mobile menu
+    const menuBtn = document.getElementById('menu-btn');
+    const mobNav  = document.getElementById('mob-nav');
+    let open = false;
+    menuBtn.addEventListener('click', () => {
+      open = !open;
+      mobNav.style.display = open ? 'flex' : 'none';
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    document.querySelectorAll('.mob-link').forEach(l => l.addEventListener('click', () => {
+      open = false; mobNav.style.display = 'none'; document.body.style.overflow = '';
+    }));
+
+    // Scroll reveal
+    const ro = new IntersectionObserver(entries =>
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); }),
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+    // Counter animation
+    const co = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target, target = +el.dataset.to;
+        let cur = 0; const step = target / (1500 / 16);
+        const t = setInterval(() => {
+          cur = Math.min(cur + step, target);
+          el.textContent = Math.floor(cur);
+          if (cur >= target) clearInterval(t);
+        }, 16);
+        co.unobserve(el);
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.cnt').forEach(c => co.observe(c));
+
+    // Filter
+    const fBtns = document.querySelectorAll('.f-btn');
+    const cards = document.querySelectorAll('.proj-card');
+    fBtns.forEach(btn => btn.addEventListener('click', () => {
+      fBtns.forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      const f = btn.dataset.f;
+      cards.forEach(card => {
+        const show = f === 'all' || (card.dataset.cat||'').includes(f);
+        card.style.display = show ? '' : 'none';
+      });
+    }));
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a =>
+      a.addEventListener('click', e => {
+        const t = document.querySelector(a.getAttribute('href'));
+        if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+      })
+    );
+  </script>
+</body>
+</html>
