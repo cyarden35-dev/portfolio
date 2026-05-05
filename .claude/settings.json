@@ -9,7 +9,19 @@
       "Bash(git commit -m ':*)",
       "Bash(git push:*)",
       "Bash(git checkout:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(where vercel:*)",
+      "Bash(npm list:*)",
+      "Bash(vercel whoami:*)",
+      "Bash(npm root:*)",
+      "Bash(export PATH=\"$PATH:$\\(npm root -g 2>/dev/null\\)/../.bin\")",
+      "Bash(export PATH=\"$PATH:C:/Users/User/AppData/Roaming/npm\")",
+      "Bash(\"C:/Users/User/AppData/Roaming/npm/vercel\" whoami:*)",
+      "Bash(\"C:/Users/User/AppData/Roaming/npm/vercel\" link:*)",
+      "Bash(\"C:/Users/User/AppData/Roaming/npm/vercel\" project:*)",
+      "Bash(\"C:/Users/User/AppData/Roaming/npm/vercel\" --yes)",
+      "Bash(\"C:/Users/User/AppData/Roaming/npm/vercel\" --prod --yes)",
+      "Bash(\"C:/Users/User/AppData/Roaming/npm/vercel\" git:*)"
     ]
   }
 }
